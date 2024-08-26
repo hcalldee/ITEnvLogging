@@ -1,0 +1,3 @@
+//install pm2 terlebih dahulu
+
+pm2 start index.js --cron-restart="0 */12 * * *" --name "IOTMonit"

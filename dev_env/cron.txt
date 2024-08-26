@@ -1,3 +1,3 @@
-//install pm2 terlebih dahulu setelah npm install baru jalankan service cron
+//install pm2 terlebih dahulu setelah npm install baru jalankan service cron, install pm2 secara global
 
 pm2 start index.js --cron-restart="0 */12 * * *" --name "IOTMonit"

@@ -3,7 +3,7 @@ const path = require('path');
 
 // Define the file contents
 const envContent = `
-HOST= host api / ip api
+HOST= host api / ip api servis
 PORT= port api
 DB_HOST= host db
 DB_USER= db user

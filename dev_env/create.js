@@ -34,9 +34,9 @@ module.exports = {
 `;
 
 // Define file paths
-const envPath = path.join(__dirname, '.env');
-const babelrcPath = path.join(__dirname, '.babelrc');
-const jestConfigPath = path.join(__dirname, 'jest.config.js');
+const envPath = path.join(__dirname, '../.env');
+const babelrcPath = path.join(__dirname, '../.babelrc');
+const jestConfigPath = path.join(__dirname, '../jest.config.js');
 
 // Create files
 fs.writeFileSync(envPath, envContent.trim(), 'utf8');

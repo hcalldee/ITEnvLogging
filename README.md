@@ -22,7 +22,7 @@ Ikuti langkah-langkah berikut untuk menginstal dan menjalankan proyek ini:
     PORT=api_port
     DB_HOST=db_host
     DB_USER=db_user
-    DB_PASSWORD= db_password
+    DB_PASSWORD=db_password
     DB_NAME=db_name
     DB_PORT=db_port  
     ``` 
@@ -96,7 +96,7 @@ Ikuti langkah-langkah berikut untuk menginstal dan menjalankan proyek ini:
 ### 7. `/update-monit-ruangan`
 - **Metode:** POST
 - **Deskripsi:** Memperbarui bobot sensor IoT untuk ruangan tertentu.
-- **Fungsi:** `updateWeight` <br> <br> <br>
+- **Fungsi:** `updateWeight` 
 - **API:**  
     ```bash 
     curl -X POST http://HOST:PORT/update-monit-ruangan \

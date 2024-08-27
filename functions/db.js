@@ -85,6 +85,18 @@ function getAllRuangan(callback) {
     });
 }
 
+function getAllTransact(callback) {
+    const query = 'SELECT * FROM Transact_monit';
+    connection.query(query, (err, results) => {
+        if (err) {
+            console.error('Error retrieving data from Transact_monit:', err.stack);
+            return callback(err, null);
+        }
+        callback(null, results);
+    });
+}
+
+
 function getFilteredRuangan(type, data, callback) {
     let query = 'SELECT * FROM Monit_Ruangan';
     const queryParams = [];
@@ -96,6 +108,20 @@ function getFilteredRuangan(type, data, callback) {
         query += ' WHERE nm_ruangan LIKE ?';
         queryParams.push(`%${data}%`);
     }
+
+    connection.query(query, queryParams, (err, results) => {
+        if (err) {
+            console.error('Error retrieving data from Monit_Ruangan:', err.stack);
+            return callback(err, null);
+        }
+        callback(null, results);
+    });
+}
+
+function getFilteredTransact(id_item, callback) {
+    let query = 'SELECT * FROM Transact_monit WHERE id_item = ?';
+    const queryParams = [];
+    queryParams.push(id_item);
 
     connection.query(query, queryParams, (err, results) => {
         if (err) {
@@ -161,5 +187,7 @@ module.exports = {
     getAllRuangan,
     getFilteredRuangan,
     getFilteredDate,
-    updateMonitRuangan
+    updateMonitRuangan,
+    getAllTransact,
+    getFilteredTransact
 };

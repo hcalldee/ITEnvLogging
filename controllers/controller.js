@@ -1,24 +1,13 @@
-const { insertIntoTransactMonit, getWeightsFromDb, getAllRuangan, getFilteredRuangan, getFilteredDate,updateMonitRuangan } = require('../functions/db.js');
-
+const { getAllTransact,getFilteredTransact, insertIntoTransactMonit, getWeightsFromDb, getAllRuangan, getFilteredRuangan, getFilteredDate,updateMonitRuangan } = require('../functions/db.js');
+const {getCurrentTimestamp} = require('../functions/utils.js');
 // Function to get the current timestamp in 'dd-mm-yyyy h:i:s' format
-function getCurrentTimestamp() {
-    const now = new Date();
-    const dd = String(now.getDate()).padStart(2, '0');
-    const mm = String(now.getMonth() + 1).padStart(2, '0');
-    const yyyy = now.getFullYear();
-    const hh = String(now.getHours()).padStart(2, '0');
-    const ii = String(now.getMinutes()).padStart(2, '0');
-    const ss = String(now.getSeconds()).padStart(2, '0');
-    return `${dd}-${mm}-${yyyy} ${hh}:${ii}:${ss}`;
-}
 
-function submitData(req, res) {
+// unit test done
+function submitData(req, res) { 
     console.log("Incoming package");
     
     const data = req.body;
 
-    
-    
     getWeightsFromDb(data.id, (err, weights) => {
         if (err) {
             return res.status(500).json({ message: 'Error retrieving weights from the database' });
@@ -50,6 +39,7 @@ function submitData(req, res) {
     });
 }
 
+// unit test done
 function getRuangan(req, res) {
     getAllRuangan((err, data) => {
         if (err) {
@@ -60,6 +50,47 @@ function getRuangan(req, res) {
     });
 }
 
+// unit test done
+const fetchAllTransacts = (req, res) => {
+    getAllTransact((err, results) => {
+        if (err) {
+            console.error('Error fetching all transactions:', err);
+            return res.status(500).json({
+                success: false,
+                message: 'Failed to retrieve transactions.',
+                error: err.message,
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            data: results,
+        });
+    });
+};
+
+// unit test done
+const fetchTransactByItemId = (req, res) => {
+    const { id_item } = req.body;
+  
+    getFilteredTransact(id_item, (err, results) => {
+      if (err) {
+        console.error('Error fetching transactions:', err);
+        return res.status(500).json({
+          success: false,
+          message: 'Failed to retrieve transactions.',
+          error: err.message,
+        });
+      }
+  
+      return res.status(200).json({
+        success: true,
+        data: results,
+      });
+    });
+  };
+
+// unit test done
 function getRuanganSpec(req, res) {
     const { type, data } = req.body;
 
@@ -76,6 +107,7 @@ function getRuanganSpec(req, res) {
     });
 }
 
+// unit test done
 function filterByDate(req, res) {
     const date = req.body;
 
@@ -91,6 +123,7 @@ function filterByDate(req, res) {
     });
 }
 
+// unit test done
 function updateWeight(req, res) {
     
     const { id_ruangan, data } = req.body || {};
@@ -121,5 +154,7 @@ module.exports = {
     getRuangan,
     getRuanganSpec,
     filterByDate,
-    updateWeight
+    updateWeight,
+    fetchTransactByItemId,
+    fetchAllTransacts
 };

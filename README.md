@@ -109,4 +109,19 @@ Ikuti langkah-langkah berikut untuk menginstal dan menjalankan proyek ini:
                     "wh": 30.0
                 }
             }'
-
+### 8. `/getTempNow`
+- **Metode:** GET
+- **Deskripsi:** Mengambil Data Live Dari Sensor.
+- **Fungsi:** `getTempNow` 
+- **API:**  
+    ```bash 
+    curl -X GET "http://HOST:PORT/getTempNow/:id" 
+- **Output Example:**  
+    ```bash 
+    {
+        "actual_temperature": "18.2℃",
+        "actual_humidity": "67%",
+        "weighted_temperature": "18.70℃",
+        "weighted_humidity": "57.00%"
+    }
+    ```

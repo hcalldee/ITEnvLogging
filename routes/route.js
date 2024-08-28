@@ -7,7 +7,8 @@ const {
     filterByDate,
     updateWeight,
     fetchAllTransacts,
-    fetchTransactByItemId
+    fetchTransactByItemId,
+    getTempNow
 } = require('../controllers/controller.js');
 
 // Add `api/` prefix to routes
@@ -18,5 +19,6 @@ router.post('/getRuanganSpec', getRuanganSpec);
 router.post('/getHistorySpec', fetchTransactByItemId);
 router.post('/filterByDate', filterByDate);
 router.post('/update-monit-ruangan', updateWeight);
+router.get('/getTempNow/:id', getTempNow);
 
 module.exports = router;

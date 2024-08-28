@@ -1,160 +1,196 @@
-const { getAllTransact,getFilteredTransact, insertIntoTransactMonit, getWeightsFromDb, getAllRuangan, getFilteredRuangan, getFilteredDate,updateMonitRuangan } = require('../functions/db.js');
-const {getCurrentTimestamp} = require('../functions/utils.js');
-// Function to get the current timestamp in 'dd-mm-yyyy h:i:s' format
+    const { getAllTransact,getFilteredTransact, insertIntoTransactMonit, getWeightsFromDb, getAllRuangan, getFilteredRuangan, getFilteredDate,updateMonitRuangan } = require('../functions/db.js');
+    const {getCurrentTimestamp,fetchTemperatureData} = require('../functions/utils.js');
+    const axios = require('axios');
+    // Function to get the current timestamp in 'dd-mm-yyyy h:i:s' format
 
-// unit test done
-function submitData(req, res) { 
-    console.log("Incoming package");
-    
-    const data = req.body;
-
-    getWeightsFromDb(data.id, (err, weights) => {
-        if (err) {
-            return res.status(500).json({ message: 'Error retrieving weights from the database' });
-        }
+    // unit test done
+    function submitData(req, res) { 
+        console.log("Incoming package");
         
-        if (data.temperature !== undefined) {
-            data.temperature += weights.x;
-        }
-        if (data.humidity !== undefined) {
-            data.humidity += weights.y;
-        }
+        const data = req.body;
 
-        const timestamp = getCurrentTimestamp();
-        data.timestamp = timestamp;
-
-        const insertData = {
-            id_item: data.id,
-            temp: data.temperature,
-            humid: data.humidity,
-            timestamp: timestamp
-        };
-
-        insertIntoTransactMonit(insertData, (err) => {
+        getWeightsFromDb(data.id, (err, weights) => {
             if (err) {
-                return res.status(500).json({ message: 'Error inserting data into the database' });
+                return res.status(500).json({ message: 'Error retrieving weights from the database' });
             }
-            res.status(200).json({ message: 'Data recorded successfully' });
+            
+            if (data.temperature !== undefined) {
+                data.temperature += weights.x;
+            }
+            if (data.humidity !== undefined) {
+                data.humidity += weights.y;
+            }
+
+            const timestamp = getCurrentTimestamp();
+            data.timestamp = timestamp;
+
+            const insertData = {
+                id_item: data.id,
+                temp: data.temperature,
+                humid: data.humidity,
+                timestamp: timestamp
+            };
+
+            insertIntoTransactMonit(insertData, (err) => {
+                if (err) {
+                    return res.status(500).json({ message: 'Error inserting data into the database' });
+                }
+                res.status(200).json({ message: 'Data recorded successfully' });
+            });
         });
-    });
-}
+    }
 
-// unit test done
-function getRuangan(req, res) {
-    getAllRuangan((err, data) => {
-        if (err) {
-            console.error('Error in /getRuangan route:', err.stack);
-            return res.status(500).json({ message: 'Failed to retrieve data from the database.' });
-        }
-        res.status(200).json(data);
-    });
-}
+    // unit test done
+    function getRuangan(req, res) {
+        getAllRuangan((err, data) => {
+            if (err) {
+                console.error('Error in /getRuangan route:', err.stack);
+                return res.status(500).json({ message: 'Failed to retrieve data from the database.' });
+            }
+            res.status(200).json(data);
+        });
+    }
 
-// unit test done
-const fetchAllTransacts = (req, res) => {
-    getAllTransact((err, results) => {
+    // unit test done
+    const fetchAllTransacts = (req, res) => {
+        getAllTransact((err, results) => {
+            if (err) {
+                console.error('Error fetching all transactions:', err);
+                return res.status(500).json({
+                    success: false,
+                    message: 'Failed to retrieve transactions.',
+                    error: err.message,
+                });
+            }
+
+            return res.status(200).json({
+                success: true,
+                data: results,
+            });
+        });
+    };
+
+    // unit test done
+    const fetchTransactByItemId = (req, res) => {
+        const { id_item } = req.body;
+    
+        getFilteredTransact(id_item, (err, results) => {
         if (err) {
-            console.error('Error fetching all transactions:', err);
+            console.error('Error fetching transactions:', err);
             return res.status(500).json({
-                success: false,
-                message: 'Failed to retrieve transactions.',
-                error: err.message,
+            success: false,
+            message: 'Failed to retrieve transactions.',
+            error: err.message,
             });
         }
-
+    
         return res.status(200).json({
             success: true,
             data: results,
         });
-    });
-};
-
-// unit test done
-const fetchTransactByItemId = (req, res) => {
-    const { id_item } = req.body;
-  
-    getFilteredTransact(id_item, (err, results) => {
-      if (err) {
-        console.error('Error fetching transactions:', err);
-        return res.status(500).json({
-          success: false,
-          message: 'Failed to retrieve transactions.',
-          error: err.message,
         });
-      }
-  
-      return res.status(200).json({
-        success: true,
-        data: results,
-      });
-    });
-  };
+    };
 
-// unit test done
-function getRuanganSpec(req, res) {
-    const { type, data } = req.body;
+    // unit test done
+    function getRuanganSpec(req, res) {
+        const { type, data } = req.body;
 
-    if (!type || !data) {
-        return res.status(400).json({ message: 'Type and data are required.' });
+        if (!type || !data) {
+            return res.status(400).json({ message: 'Type and data are required.' });
+        }
+
+        getFilteredRuangan(type, data, (err, filteredData) => {
+            if (err) {
+                console.error('Error in /getRuanganSpec route:', err.stack);
+                return res.status(500).json({ message: 'Failed to retrieve data from the database.' });
+            }
+            res.status(200).json(filteredData);
+        });
     }
 
-    getFilteredRuangan(type, data, (err, filteredData) => {
-        if (err) {
-            console.error('Error in /getRuanganSpec route:', err.stack);
-            return res.status(500).json({ message: 'Failed to retrieve data from the database.' });
-        }
-        res.status(200).json(filteredData);
-    });
-}
-
-// unit test done
-function filterByDate(req, res) {
-    const date = req.body;
-
-    if (!date.startDate || !date.endDate) {
-        return res.status(400).json({ error: 'Missing startDate or endDate' });
-    }
-
-    getFilteredDate(date, (err, results) => {
-        if (err) {
-            return res.status(400).json({ error: err.message });
-        }
-        res.json(results);
-    });
-}
-
-// unit test done
-function updateWeight(req, res) {
+    async function getTempNow(req, res) {
+        try {
+            // Memeriksa apakah ID disediakan
+            if (!req.params.id) {
+                return res.status(400).json({ message: 'ID is required.' });
+            }
     
-    const { id_ruangan, data } = req.body || {};
-
-    // Validate input
-    if (!id_ruangan || !data || typeof data !== 'object') {
-        return res.status(400).json({ error: 'Invalid input' });
-    }
-
-    const { nm_ruangan, wt, wh } = data;
-
-    // Check if required fields are provided
-    if (!nm_ruangan || wt === undefined || wh === undefined) {
-        return res.status(400).json({ error: 'Missing required fields' });
-    }
-
-    // Call the function to update the database
-    updateMonitRuangan(id_ruangan, { nm_ruangan, wt, wh }, (err, result) => {
-        if (err) {
-            return res.status(500).json({ error: 'Error updating data' });
+            getFilteredRuangan('id', req.params.id, async (err, results) => {
+                if (err) {
+                    return res.status(500).json({ message: 'Error fetching data from database.' });
+                }
+    
+                const ipAddress = results[0].IPAddr!='' ? results[0].IPAddr : false;
+    
+                if (!ipAddress) {
+                    return res.status(400).json({ message: 'IP address not found.' });
+                }
+    
+                const temp = results[0].wt;
+                const humid = results[0].wh;
+    
+                try {
+                    // Use fetchTemperatureData function
+                    await fetchTemperatureData(ipAddress, temp, humid, res);
+                } catch (error) {
+                    res.status(500).json({ message: 'Error fetching temperature data.' });
+                }
+            });
+        } catch (error) {
+            res.status(500).json({ message: 'Internal server error.' });
         }
-        res.status(200).json({ message: 'Update successful', result });
-    });
-}
+    }
+    
+    
+    // unit test done
+    function filterByDate(req, res) {
+        const date = req.body;
 
-module.exports = {
-    submitData,
-    getRuangan,
-    getRuanganSpec,
-    filterByDate,
-    updateWeight,
-    fetchTransactByItemId,
-    fetchAllTransacts
-};
+        if (!date.startDate || !date.endDate) {
+            return res.status(400).json({ error: 'Missing startDate or endDate' });
+        }
+
+        getFilteredDate(date, (err, results) => {
+            if (err) {
+                return res.status(400).json({ error: err.message });
+            }
+            res.json(results);
+        });
+    }
+
+    // unit test done
+    function updateWeight(req, res) {
+        
+        const { id_ruangan, data } = req.body || {};
+
+        // Validate input
+        if (!id_ruangan || !data || typeof data !== 'object') {
+            return res.status(400).json({ error: 'Invalid input' });
+        }
+
+        const { nm_ruangan, wt, wh } = data;
+
+        // Check if required fields are provided
+        if (!nm_ruangan || wt === undefined || wh === undefined) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
+
+        // Call the function to update the database
+        updateMonitRuangan(id_ruangan, { nm_ruangan, wt, wh }, (err, result) => {
+            if (err) {
+                return res.status(500).json({ error: 'Error updating data' });
+            }
+            res.status(200).json({ message: 'Update successful', result });
+        });
+    }
+
+    module.exports = {
+        submitData,
+        getRuangan,
+        getRuanganSpec,
+        filterByDate,
+        updateWeight,
+        fetchTransactByItemId,
+        fetchAllTransacts,
+        getTempNow
+    };

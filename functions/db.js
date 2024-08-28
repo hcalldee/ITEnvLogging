@@ -102,10 +102,10 @@ function getFilteredRuangan(type, data, callback) {
     const queryParams = [];
 
     if (type === 'id') {
-        query += ' WHERE id_ruangan = ?';
+        query += ' WHERE id_ruangan = ? limit 1';
         queryParams.push(data);
     } else if (type === 'name') {
-        query += ' WHERE nm_ruangan LIKE ?';
+        query += ' WHERE nm_ruangan LIKE ? ';
         queryParams.push(`%${data}%`);
     }
 

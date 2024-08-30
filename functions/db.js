@@ -146,9 +146,13 @@ function getFilteredDate(date, callback) {
         }
 
         // Construct query and parameters
-        const query = 'SELECT * FROM Transact_monit WHERE timestamp BETWEEN ? AND ?';
-        const queryParams = [date.startDate, date.endDate];
-
+        const query = `
+        SELECT * FROM Transact_monit 
+        WHERE STR_TO_DATE(timestamp, '%d-%m-%Y %H:%i:%s') 
+        BETWEEN STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s') 
+        AND STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s')
+        `;
+        const queryParams = [date.startDate + ' 00:00:00', date.endDate + ' 23:59:59'];
         // Execute the query
         connection.query(query, queryParams, (err, results) => {
             if (err) {

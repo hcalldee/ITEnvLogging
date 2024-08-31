@@ -1,4 +1,4 @@
-    const { getAllTransact,getFilteredTransact, insertIntoTransactMonit, getWeightsFromDb, getAllRuangan, getFilteredRuangan, getFilteredDate,updateMonitRuangan } = require('../functions/db.js');
+    const { getJadwalMonitoring,getAllTransact,getFilteredTransact, insertIntoTransactMonit, getWeightsFromDb, getAllRuangan, getFilteredRuangan, getFilteredDate,updateMonitRuangan } = require('../functions/db.js');
     const {getCurrentTimestamp,fetchTemperatureData} = require('../functions/utils.js');
     const axios = require('axios');
     // Function to get the current timestamp in 'dd-mm-yyyy h:i:s' format
@@ -108,6 +108,23 @@
         });
     }
 
+        // unit test done
+    function getJadwalMonit(req, res) {
+        const { id } = req.params;
+        
+        if (!id) {
+            return res.status(400).json({ message: 'id are required.' });
+        }
+
+        getJadwalMonitoring(id, (err, filteredData) => {
+            if (err) {
+                console.error('Error in /getMonitoringSpec route:', err.stack);
+                return res.status(500).json({ message: 'Failed to retrieve data from the database.' });
+            }
+            res.status(200).json(filteredData);
+        });
+    }
+
     async function getTempNow(req, res) {
         try {
             // Memeriksa apakah ID disediakan
@@ -192,5 +209,6 @@
         updateWeight,
         fetchTransactByItemId,
         fetchAllTransacts,
-        getTempNow
+        getTempNow,
+        getJadwalMonit
     };

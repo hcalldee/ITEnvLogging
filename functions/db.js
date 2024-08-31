@@ -132,6 +132,20 @@ function getFilteredTransact(id_item, callback) {
     });
 }
 
+function getJadwalMonitoring(id_item, callback) {
+    let query = 'SELECT * FROM jadwal_sampling_monit WHERE id_item = ?';
+    const queryParams = [];
+    queryParams.push(id_item);
+
+    connection.query(query, queryParams, (err, results) => {
+        if (err) {
+            console.error('Error retrieving data from jadwal_sampling:', err.stack);
+            return callback(err, null);
+        }
+        callback(null, results);
+    });
+}
+
 function getFilteredDate(date, callback) {
     try {
         // Parse dates
@@ -183,6 +197,8 @@ function updateMonitRuangan(id_ruangan, data, callback) {
 }
 
 
+
+
 // Export the function
 module.exports = {
     close,
@@ -193,5 +209,6 @@ module.exports = {
     getFilteredDate,
     updateMonitRuangan,
     getAllTransact,
-    getFilteredTransact
+    getFilteredTransact,
+    getJadwalMonitoring
 };

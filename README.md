@@ -125,3 +125,18 @@ Ikuti langkah-langkah berikut untuk menginstal dan menjalankan proyek ini:
         "weighted_humidity": "57.00%"
     }
     ```
+### 9. `/getJadwalMonitoring`
+- **Metode:** GET
+- **Deskripsi:** Mengambil Data Live Dari Sensor.
+- **Fungsi:** `getJadwalMonitoring` 
+- **API:**  
+    ```bash 
+    curl -X GET "http://HOST:PORT/getJadwalMonitoring/:id" 
+- **Output Example:**  
+    ```bash 
+    {
+        "id_jadwal": 1,
+        "id_item": "1",
+        "waktu_sampling": "16:00:00"
+    }
+    ```

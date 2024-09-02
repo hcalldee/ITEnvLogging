@@ -9,7 +9,10 @@ const {
     fetchAllTransacts,
     fetchTransactByItemId,
     getTempNow,
-    getJadwalMonit
+    getJadwalMonit,
+    updateJadwalController,
+    addJadwalController,
+    deleteJadwal
 } = require('../controllers/controller.js');
 
 // Add `api/` prefix to routes
@@ -22,5 +25,8 @@ router.post('/filterByDate', filterByDate);
 router.post('/update-monit-ruangan', updateWeight);
 router.get('/getTempNow/:id', getTempNow);
 router.get('/getJadwalMonitoring/:id', getJadwalMonit);
+router.post('/updateJadwal/', updateJadwalController);
+router.post('/addJadwal/', addJadwalController);
+router.post('/deleteJadwal/', deleteJadwalController);
 
 module.exports = router;

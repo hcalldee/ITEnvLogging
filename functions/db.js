@@ -196,6 +196,50 @@ function updateMonitRuangan(id_ruangan, data, callback) {
     });
 }
 
+function updateMonitJadwal(id_jadwal, data, callback) {
+    const { waktu } = data;
+    const query = 'UPDATE jadwal_sampling_monit SET waktu_sampling = ? WHERE id_jadwal = ? ';
+
+    connection.query(query, [waktu, id_jadwal], (err, result) => {
+        if (err) {
+            console.error('Error updating jadwal_sampling:', err.stack);
+            callback(err, null);
+        } else {
+            console.log('jadwal_sampling updated:', result);
+            callback(null, result);
+        }
+    });
+}
+
+function addMonitJadwal(id_jadwal, data, callback) {
+    const { waktu } = data;
+    const query = 'INSERT INTO jadwal_sampling_monit (id_item, waktu_sampling) VALUES (?, ?)';
+
+    connection.query(query, [waktu, id_jadwal], (err, result) => {
+        if (err) {
+            console.error('Error updating jadwal_sampling:', err.stack);
+            callback(err, null);
+        } else {
+            console.log('jadwal_sampling inserted:', result);
+            callback(null, result);
+        }
+    });
+}
+
+function deleteMonitJadwal(id_jadwal, callback) {
+    const query = 'DELETE FROM jadwal_sampling_monit WHERE id_jadwal = ?';
+
+    connection.query(query, [id_jadwal], (err, result) => {
+        if (err) {
+            console.error('Error deleting jadwal_sampling:', err.stack);
+            callback(err, null);
+        } else {
+            console.log('jadwal_sampling deleted:', result);
+            callback(null, result);
+        }
+    });
+}
+
 
 
 
@@ -210,5 +254,8 @@ module.exports = {
     updateMonitRuangan,
     getAllTransact,
     getFilteredTransact,
-    getJadwalMonitoring
+    getJadwalMonitoring,
+    updateMonitJadwal,
+    addMonitJadwal,
+    deleteMonitJadwal
 };

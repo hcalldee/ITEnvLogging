@@ -127,7 +127,7 @@ Ikuti langkah-langkah berikut untuk menginstal dan menjalankan proyek ini:
     ```
 ### 9. `/getJadwalMonitoring`
 - **Metode:** GET
-- **Deskripsi:** Mengambil Data Live Dari Sensor.
+- **Deskripsi:** Mengambil Jadwal Sampling.
 - **Fungsi:** `getJadwalMonitoring` 
 - **API:**  
     ```bash 
@@ -139,4 +139,39 @@ Ikuti langkah-langkah berikut untuk menginstal dan menjalankan proyek ini:
         "id_item": "1",
         "waktu_sampling": "16:00:00"
     }
-    ```
+### 10. `/updateJadwal`
+- **Metode:** POST
+- **Deskripsi:** Update Jadwal Sampling.
+- **Fungsi:** `updateJadwal` 
+- **API:**  
+    ```bash 
+    curl -X POST http://HOST:PORT/updateJadwal \
+     -H "Content-Type: application/json" \
+     -d '{
+            "id_jadwal": "12345", 
+            "waktu": "2024-09-01 10:00:00
+        "}'
+### 11. `/addJadwal`
+- **Metode:** POST
+- **Deskripsi:** Add Jadwal Sampling.
+- **Fungsi:** `addJadwal` 
+- **API:**  
+    ```bash 
+    curl -X POST http://HOST:PORT/addJadwal \
+     -H "Content-Type: application/json" \
+     -d '{
+            "id_item": "12345", 
+            "waktu": "2024-09-01 10:00:00
+        "}'
+### 12. `/deleteJadwal`
+- **Metode:** POST
+- **Deskripsi:** Add Jadwal Sampling.
+- **Fungsi:** `deleteJadwal` 
+- **API:**  
+    ```bash 
+    curl -X POST http://HOST:PORT/deleteJadwal \
+     -H "Content-Type: application/json" \
+     -d '{
+            "id_jadwal": "12345"
+        "}'
+.

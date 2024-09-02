@@ -1,4 +1,4 @@
-    const { getJadwalMonitoring,getAllTransact,getFilteredTransact, insertIntoTransactMonit, getWeightsFromDb, getAllRuangan, getFilteredRuangan, getFilteredDate,updateMonitRuangan } = require('../functions/db.js');
+    const {deleteMonitJadwal,addMonitJadwal, updateMonitJadwal, getJadwalMonitoring,getAllTransact,getFilteredTransact, insertIntoTransactMonit, getWeightsFromDb, getAllRuangan, getFilteredRuangan, getFilteredDate,updateMonitRuangan } = require('../functions/db.js');
     const {getCurrentTimestamp,fetchTemperatureData} = require('../functions/utils.js');
     const axios = require('axios');
     // Function to get the current timestamp in 'dd-mm-yyyy h:i:s' format
@@ -201,6 +201,122 @@
         });
     }
 
+    function updateJadwalController(req, res) {
+        if (!req.body) {
+            return res.status(400).json({
+                success: false,
+                message: 'Request body is required.',
+            });
+        }
+       
+        var id_jadwal = req.body.id_jadwal;
+        var data = req.body.waktu;
+    
+        if (!id_jadwal) {
+            return res.status(400).json({
+                success: false,
+                message: 'id_jadwal is required.',
+            });
+        }
+    
+        if (!data) {
+            return res.status(400).json({
+                success: false,
+                message: 'waktu is required.',
+            });
+        }
+    
+           
+        updateMonitJadwal(id_jadwal, data, function(err, result) {
+            if (err) {
+                return res.status(500).json({
+                    success: false,
+                    message: 'Gagal mengupdate jadwal sampling.',
+                    error: err.message
+                });
+            }
+    
+            res.status(200).json({
+                success: true,
+                message: 'Jadwal sampling berhasil diupdate.',
+                data: result
+            });
+        });
+    }
+       
+       
+
+    function addJadwalController(req, res) {
+        // Cek apakah req.body ada
+        if (!req.body) {
+            return res.status(400).json({
+                success: false,
+                message: 'Request body is required.',
+            });
+        }
+    
+        var id_item = req.body.id_item;
+        var data = req.body.waktu;
+    
+        // Cek apakah id_jadwal ada
+        if (!id_item) {
+            return res.status(400).json({
+                success: false,
+                message: 'id_jadwal is required.',
+            });
+        }
+    
+        // Cek apakah waktu ada
+        if (!data) {
+            return res.status(400).json({
+                success: false,
+                message: 'waktu is required.',
+            });
+        }
+    
+        // Memanggil fungsi addMonitJadwal
+        addMonitJadwal(id_item, data, function(err, result) {
+            if (err) {
+                return res.status(500).json({
+                    success: false,
+                    message: 'Gagal menambahkan jadwal sampling.',
+                    error: err.message
+                });
+            }
+    
+            res.status(201).json({
+                success: true,
+                message: 'Jadwal sampling berhasil ditambahkan.',
+                data: result
+            });
+        });
+    }
+
+    function deleteJadwalController(req, res) {
+        // Check if the request body exists and contains id_jadwal
+        if (!req.body || !req.body.id_jadwal) {
+            return res.status(400).json({
+                message: 'Request body and id_jadwal are required'
+            });
+        }
+    
+        const id_jadwal = req.body.id_jadwal;
+    
+        deleteMonitJadwal(id_jadwal, function(err, result) {
+            if (err) {
+                return res.status(500).json({
+                    message: 'Failed to delete jadwal_sampling',
+                    error: err.message
+                });
+            }
+    
+            res.status(200).json({
+                message: 'jadwal_sampling deleted successfully',
+                result: result
+            });
+        });
+    }
+    
     module.exports = {
         submitData,
         getRuangan,
@@ -210,5 +326,8 @@
         fetchTransactByItemId,
         fetchAllTransacts,
         getTempNow,
-        getJadwalMonit
+        getJadwalMonit,
+        updateJadwalController,
+        addJadwalController,
+        deleteJadwalController
     };

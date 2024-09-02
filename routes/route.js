@@ -12,7 +12,7 @@ const {
     getJadwalMonit,
     updateJadwalController,
     addJadwalController,
-    deleteJadwal
+    deleteJadwalController
 } = require('../controllers/controller.js');
 
 // Add `api/` prefix to routes

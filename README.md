@@ -165,7 +165,7 @@ Ikuti langkah-langkah berikut untuk menginstal dan menjalankan proyek ini:
         "}'
 ### 12. `/deleteJadwal`
 - **Metode:** POST
-- **Deskripsi:** Add Jadwal Sampling.
+- **Deskripsi:** delete Jadwal Sampling.
 - **Fungsi:** `deleteJadwal` 
 - **API:**  
     ```bash 

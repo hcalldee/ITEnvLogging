@@ -197,10 +197,9 @@ function updateMonitRuangan(id_ruangan, data, callback) {
 }
 
 function updateMonitJadwal(id_jadwal, data, callback) {
-    const { waktu } = data;
     const query = 'UPDATE jadwal_sampling_monit SET waktu_sampling = ? WHERE id_jadwal = ? ';
 
-    connection.query(query, [waktu, id_jadwal], (err, result) => {
+    connection.query(query, [data, id_jadwal], (err, result) => {
         if (err) {
             console.error('Error updating jadwal_sampling:', err.stack);
             callback(err, null);
@@ -212,10 +211,9 @@ function updateMonitJadwal(id_jadwal, data, callback) {
 }
 
 function addMonitJadwal(id_jadwal, data, callback) {
-    const { waktu } = data;
     const query = 'INSERT INTO jadwal_sampling_monit (id_item, waktu_sampling) VALUES (?, ?)';
 
-    connection.query(query, [waktu, id_jadwal], (err, result) => {
+    connection.query(query, [id_jadwal,data], (err, result) => {
         if (err) {
             console.error('Error updating jadwal_sampling:', err.stack);
             callback(err, null);

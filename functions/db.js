@@ -46,15 +46,17 @@ function parseDate(dateStr) {
 
 // Function to insert data into Transact_monit table
 
-function insertIntoTransactMonit(data) {
+function insertIntoTransactMonit(data,callback) {
     const id = uuidv4(); // Generate a UUID for the id
     const { id_item, temp, humid, timestamp } = data;
     const query = 'INSERT INTO Transact_monit (id, id_item, temp, humid, timestamp) VALUES (?, ?, ?, ?, ?)';
     connection.query(query, [id, id_item, temp, humid, timestamp], (err, result) => {
         if (err) {
             console.error('Error inserting data into Transact_monit:', err.stack);
+            callback(err, null);
         } else {
             console.log('Data inserted into Transact_monit:', result);
+            callback(null, result);
         }
     });
 }
@@ -133,7 +135,7 @@ function getFilteredTransact(id_item, callback) {
 }
 
 function getJadwalMonitoring(id_item, callback) {
-    let query = `SELECT a.*, b.wt,b.wh FROM jadwal_sampling_monit AS a 
+    let query = `SELECT a.*, b.wt,b.wh, b.IPAddr FROM jadwal_sampling_monit AS a 
                  LEFT JOIN Monit_Ruangan AS b ON a.id_item = b.id_ruangan 
                  WHERE a.id_item = ?`;
     const queryParams = [];

@@ -5,8 +5,8 @@
 #include <HTTPClient.h>
 
 // Replace these with your network credentials
-const char* ssid = "rspi.ranap";
-const char* password = "rspi2023";
+const char* ssid = "";
+const char* password = "";
 
 // Initialize DHT sensor
 DHT dht(26, DHT11); // DHT11 on GPIO 26
@@ -15,8 +15,8 @@ DHT dht(26, DHT11); // DHT11 on GPIO 26
 WebServer server(80);
 
 // API endpoint
-const char* apiEndpoint = "http://192.168.1.108:8028/submit";
-const char* itemEndpoint = "http://192.168.1.108:8028/getRuanganSpec";
+const char* apiEndpoint = "http://localhost:8028/submit";
+const char* itemEndpoint = "http://localhost:8028/getRuanganSpec";
 
 // Global ID
 const int id = 1; // Replace with your actual ID_item, kode mesin
@@ -34,7 +34,7 @@ void submitData(float temperature, float humidity) {
     HTTPClient http;
     http.begin(apiEndpoint);  // Specify the URL for data submission
     http.addHeader("Content-Type", "application/json");  // Content type as JSON
-    http.setTimeout(15000); 
+    http.setTimeout(5000); 
     // Create the JSON payload
     StaticJsonDocument<200> jsonPayload;
     jsonPayload["id"] = id;
@@ -108,7 +108,9 @@ SensorData postData() {
 }
 void handleSubmit() {
   SensorData data = postData();  // Get the data from postData
-  submitData(data.temperature, data.humidity); 
+  submitData(data.temperature, data.humidity);
+  String jsonResponse = "{\"Data berhasil dikirim\"}";
+  server.send(200, "application/json", jsonResponse); 
 }
 
 

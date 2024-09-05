@@ -137,8 +137,10 @@ Ikuti langkah-langkah berikut untuk menginstal dan menjalankan proyek ini:
     {
         "id_jadwal": 1,
         "id_item": "1",
-        "waktu_sampling": "16:00:00"
-    }
+        "waktu_sampling": "16:00:00",
+        "wt": 0.5,
+        "wh": -11
+    },
 ### 10. `/updateJadwal`
 - **Metode:** POST
 - **Deskripsi:** Update Jadwal Sampling.

@@ -32,7 +32,13 @@ describe('getJadwalMonit', () => {
 
     it('should return 200 and the filteredData if getJadwalMonitoring succeeds', () => {
         req.params.id = '123';
-        const filteredData = { data: 'some data' };
+        const filteredData = {
+            id_jadwal: 1,
+            id_item: "1",
+            waktu_sampling: "16:00:00",
+            wt: 0.5,
+            wh: -11
+        };
         getJadwalMonitoring.mockImplementation((id, callback) => callback(null, filteredData));
 
         getJadwalMonit(req, res);

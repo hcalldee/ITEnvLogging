@@ -133,7 +133,9 @@ function getFilteredTransact(id_item, callback) {
 }
 
 function getJadwalMonitoring(id_item, callback) {
-    let query = 'SELECT * FROM jadwal_sampling_monit WHERE id_item = ?';
+    let query = `SELECT a.*, b.wt,b.wh FROM jadwal_sampling_monit AS a 
+                 LEFT JOIN Monit_Ruangan AS b ON a.id_item = b.id_ruangan 
+                 WHERE a.id_item = ?`;
     const queryParams = [];
     queryParams.push(id_item);
 

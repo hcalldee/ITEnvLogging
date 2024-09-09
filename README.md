@@ -176,4 +176,27 @@ Ikuti langkah-langkah berikut untuk menginstal dan menjalankan proyek ini:
      -d '{
             "id_jadwal": "12345"
         "}'
+### 13. `/addRuangan`
+- **Metode:** POST
+- **Deskripsi:** add Ruangan Monitoring.
+- **Fungsi:** `addRuangan` 
+- **API:**  
+    ```bash 
+    curl -X POST http://HOST:PORT/addRuangan \
+     -H "Content-Type: application/json" \
+     -d '{
+           "nm_ruangan": "Room A", // nama ruangan
+           "IPAddr": "192.168.1.1" // ip alat
+         }'
+### 14. `/deleteRuangan`
+- **Metode:** POST
+- **Deskripsi:** delete ruangan monitoring.
+- **Fungsi:** `deleteRuangan` 
+- **API:**  
+    ```bash 
+    curl -X POST http://HOST:PORT/deleteRuangan \
+     -H "Content-Type: application/json" \
+     -d '{
+           "id": "12345" // id ruangan
+         }'
 .

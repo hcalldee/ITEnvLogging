@@ -1,4 +1,4 @@
-    const {deleteMonitJadwal,addMonitJadwal, updateMonitJadwal, getJadwalMonitoring,getAllTransact,getFilteredTransact, insertIntoTransactMonit, getWeightsFromDb, getAllRuangan, getFilteredRuangan, getFilteredDate,updateMonitRuangan } = require('../functions/db.js');
+    const {deleteMonitRuangan,insertIntoMonitRuangan, deleteMonitJadwal,addMonitJadwal, updateMonitJadwal, getJadwalMonitoring,getAllTransact,getFilteredTransact, insertIntoTransactMonit, getWeightsFromDb, getAllRuangan, getFilteredRuangan, getFilteredDate,updateMonitRuangan } = require('../functions/db.js');
     const {getCurrentTimestamp,fetchTemperatureData} = require('../functions/utils.js');
     const axios = require('axios');
     // Function to get the current timestamp in 'dd-mm-yyyy h:i:s' format
@@ -37,6 +37,77 @@
                 }
                 res.status(200).json({ message: 'Data recorded successfully' });
             });
+        });
+    }
+
+    function addMonitorRoom(req, res) {
+        var data = req.body;
+    
+        // Validate that request body is present
+        if (!data) {
+            return res.status(400).json({
+                success: false,
+                message: 'Request body is missing'
+            });
+        }
+    
+        // Validate required fields
+        var nm_ruangan = data.nm_ruangan;
+        var IPAddr = data.IPAddr;
+    
+        if (!nm_ruangan || !IPAddr) {
+            return res.status(400).json({
+                success: false,
+                message: 'Missing required fields: nm_ruangan and/or IPAddr'
+            });
+        }
+    
+        insertIntoMonitRuangan(data, function(err, result) {
+            if (err) {
+                // Send error response if there was an issue with the database query
+                res.status(500).json({
+                    success: false,
+                    message: 'Failed to insert data into Monit_Ruangan',
+                    error: err.message
+                });
+            } else {
+                // Send success response if the data was inserted successfully
+                res.status(200).json({
+                    success: true,
+                    message: 'Data successfully inserted into Monit_Ruangan',
+                    result: result
+                });
+            }
+        });
+    }
+
+    function removeMonitorRoom(req, res) {
+        var id = req.body.id;
+    
+        // Validate that the ID is provided
+        if (!id) {
+            return res.status(400).json({
+                success: false,
+                message: 'ID is required'
+            });
+        }
+    
+        deleteMonitRuangan(id, function(err, result) {
+            if (err) {
+                // Send error response if there was an issue with the database query
+                return res.status(500).json({
+                    success: false,
+                    message: 'Failed to delete data from Monit_Ruangan',
+                    error: err.message
+                });
+            } else {
+                // Send success response if the data was deleted successfully
+                return res.status(200).json({
+                    success: true,
+                    message: 'Data successfully deleted from Monit_Ruangan',
+                    result: result
+                });
+            }
         });
     }
 
@@ -329,5 +400,7 @@
         getJadwalMonit,
         updateJadwalController,
         addJadwalController,
-        deleteJadwalController
+        deleteJadwalController,
+        addMonitorRoom,
+        removeMonitorRoom
     };

@@ -12,7 +12,9 @@ const {
     getJadwalMonit,
     updateJadwalController,
     addJadwalController,
-    deleteJadwalController
+    deleteJadwalController,
+    addMonitorRoom,
+    removeMonitorRoom
 } = require('../controllers/controller.js');
 
 // Add `api/` prefix to routes
@@ -28,5 +30,7 @@ router.get('/getJadwalMonitoring/:id', getJadwalMonit);
 router.post('/updateJadwal/', updateJadwalController);
 router.post('/addJadwal/', addJadwalController);
 router.post('/deleteJadwal/', deleteJadwalController);
+router.post('/addRuangan/', addMonitorRoom);
+router.post('/deleteRuangan/', removeMonitorRoom);
 
 module.exports = router;

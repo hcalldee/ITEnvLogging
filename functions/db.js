@@ -61,6 +61,35 @@ function insertIntoTransactMonit(data,callback) {
     });
 }
 
+
+function insertIntoMonitRuangan(data,callback) {
+    const { nm_ruangan, IPAddr } = data;
+    const query = 'INSERT INTO Monit_Ruangan ( nm_ruangan, IPAddr, wt, wh) VALUES (?, ?, ?, ?)';
+    connection.query(query, [nm_ruangan, IPAddr, 0, 0 ], (err, result) => {
+        if (err) {
+            console.error('Error inserting data into Monit_Ruangan:', err.stack);
+            callback(err, null);
+        } else {
+            console.log('Data inserted into Monit_Ruangan:', result);
+            callback(null, result);
+        }
+    });
+}
+
+function deleteMonitRuangan(id, callback) {
+    const query = 'DELETE FROM Monit_Ruangan WHERE id_ruangan = ?';
+
+    connection.query(query, [id], (err, result) => {
+        if (err) {
+            console.error('Error deleting Monit_Ruangan:', err.stack);
+            callback(err, null);
+        } else {
+            console.log('Monit_Ruangan deleted:', result);
+            callback(null, result);
+        }
+    });
+}
+
 function getWeightsFromDb(id, callback) {
     const query = 'SELECT wt AS x, wh AS y FROM Monit_Ruangan WHERE id_ruangan = ? LIMIT 1';
     connection.query(query, [id], (err, results) => {
@@ -259,5 +288,7 @@ module.exports = {
     getJadwalMonitoring,
     updateMonitJadwal,
     addMonitJadwal,
-    deleteMonitJadwal
+    deleteMonitJadwal,
+    insertIntoMonitRuangan,
+    deleteMonitRuangan
 };
